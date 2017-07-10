@@ -192,8 +192,8 @@ class _HMMBase(Model):
         for s in self.states_list:
             for state in s.stateseq:
                 canonical_ids[state]
-        return map(operator.itemgetter(0),
-                sorted(canonical_ids.items(),key=operator.itemgetter(1)))
+        return list(map(operator.itemgetter(0),
+                sorted(canonical_ids.items(),key=operator.itemgetter(1))))
 
     @property
     def state_usages(self):
@@ -472,7 +472,7 @@ class _HMMGibbsSampling(_HMMBase,ModelGibbsSampling):
         new = copy.copy(self)
         new.obs_distns = [o.copy_sample() for o in self.obs_distns]
         new.trans_distn = self.trans_distn.copy_sample()
-        new.init_state_distn = self.init_state_distn.copy_sample()
+        new.init_state_distn = self.init_state_distn.copy_sample(new)
         new.states_list = [s.copy_sample(new) for s in self.states_list]
         return new
 
